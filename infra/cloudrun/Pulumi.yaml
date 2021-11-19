@@ -1,0 +1,6 @@
+name: circleci-pulumi
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: A sample Falcon API running with CircleCi and Pulumi on GCP

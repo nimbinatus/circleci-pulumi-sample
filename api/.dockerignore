@@ -1,0 +1,11 @@
+Dockerfile
+LICENSE
+Pipfile
+Pipfile.lock
+README.md
+infra/
+*.pyc
+*.pyo
+*.pyd
+__pycache__
+.pytest.cache
