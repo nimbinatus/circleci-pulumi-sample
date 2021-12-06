@@ -10,14 +10,15 @@ jobs:
       - checkout
       - pulumi/login:
           access-token: ${PULUMI_ACCESS_TOKEN}
-      - run:
-          name: Install pipenv
-          command: |
-            pip install pipenv
+#      - run:
+#          name: Install pipenv
+#          command: |
+#            pip install pipenv
       - run:
           name: Install dependencies
           command: |
-            pipenv install
+            pip install -r requirements.txt
+#            pipenv install
       - pulumi/preview:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
           working_directory: ~/circleci/project/infra/image
@@ -50,14 +51,15 @@ jobs:
       - checkout
       - pulumi/login:
           access-token: ${PULUMI_ACCESS_TOKEN}
-      - run:
-          name: Install pipenv
-          command: |
-            pip install pipenv
+#      - run:
+#          name: Install pipenv
+#          command: |
+#            pip install pipenv
       - run:
           name: Install dependencies
           command: |
-            pipenv install
+            pip install -r requirements.txt
+#            pipenv install
       - pulumi/update:
           stack: nimbinatus/docker-image-circleci/dev
           working_directory: ./infra/image
@@ -67,14 +69,15 @@ jobs:
     steps:
       - checkout
       - pulumi/login
-      - run:
-          name: Install pipenv
-          command: |
-            pip install pipenv
+#      - run:
+#          name: Install pipenv
+#          command: |
+#            pip install pipenv
       - run:
           name: Install dependencies
           command: |
-            pipenv install
+            pip install -r requirements.txt
+#            pipenv install
       - pulumi/update:
           stack: nimbinatus/circleci-pulumi/dev
           working_directory: ~/project/infra/cloudrun
