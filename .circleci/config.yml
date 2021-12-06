@@ -5,26 +5,23 @@ jobs:
   preview:
     docker:
       - image: cimg/python:3.9
-#    working_directory: ~/repo
     steps:
       - checkout
       - pulumi/login:
           access-token: ${PULUMI_ACCESS_TOKEN}
-#      - run:
-#          name: Install pipenv
-#          command: |
-#            pip install pipenv
       - run:
           name: Install dependencies
           command: |
-            pip install -r ~/circleci/project/infra/image/requirements.txt
-#            pipenv install
+            cd ~/project/infra/image
+            python -m venv .
+            source venv/bin/activate
+            pip install -r ~/project/infra/image/requirements.txt
       - pulumi/preview:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
-          working_directory: ~/circleci/project/infra/image
+          working_directory: ~/project/infra/image
       - pulumi/preview:
           stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}
-          working_directory: ~/circleci/project/infra/cloudrun
+          working_directory: ~/project/infra/cloudrun
       - pulumi/stack_output:
           stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}
           property_name: cloud_run_url
@@ -35,10 +32,10 @@ jobs:
             curl --sSJL $TEST_URL/hello
       - pulumi/destroy:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
-          working_directory: ~/circleci/project/infra/image
+          working_directory: ~/project/infra/image
       - pulumi/destroy:
           stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}
-          working_directory: ~/circleci/project/infra/cloudrun
+          working_directory: ~/project/infra/cloudrun
       - pulumi/stack_rm:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
       - pulumi/stack_rm:
@@ -46,38 +43,33 @@ jobs:
   build:
     docker:
       - image: cimg/python:3.9
-#    working_directory: ~/repo
     steps:
       - checkout
       - pulumi/login:
           access-token: ${PULUMI_ACCESS_TOKEN}
-#      - run:
-#          name: Install pipenv
-#          command: |
-#            pip install pipenv
       - run:
           name: Install dependencies
           command: |
+            cd ~/project/infra/image
+            python -m venv .
+            source venv/bin/activate
             pip install -r ~/project/infra/image/requirements.txt
-#            pipenv install
       - pulumi/update:
           stack: nimbinatus/docker-image-circleci/dev
-          working_directory: ./infra/image
+          working_directory: ~/project/infra/image
   deploy:
     docker:
       - image: cimg/python:3.9
     steps:
       - checkout
       - pulumi/login
-#      - run:
-#          name: Install pipenv
-#          command: |
-#            pip install pipenv
       - run:
           name: Install dependencies
           command: |
-            pip install -r requirements.txt
-#            pipenv install
+            cd ~/project/infra/cloudrun
+            python -m venv .
+            source venv/bin/activate
+            pip install -r ~/project/infra/cloudrun/requirements.txt
       - pulumi/update:
           stack: nimbinatus/circleci-pulumi/dev
           working_directory: ~/project/infra/cloudrun
