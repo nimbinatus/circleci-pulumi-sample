@@ -19,13 +19,13 @@ jobs:
           command: |
             pipenv install
       - pulumi/preview:
-          stack: nimbinatus/circleci-pulumi-sample-image/qa_${CIRCLE_BUILD_NUM}
+          stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
           working_directory: ~/repo/infra/image
       - pulumi/preview:
-          stack: nimbinatus/circleci-pulumi-sample-cloudrun/qa_${CIRCLE_BUILD_NUM}
+          stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}
           working_directory: ~/repo/infra/cloudrun
       - pulumi/stack_output:
-          stack: nimbinatus/circleci-pulumi-sample-cloudrun/qa_${CIRCLE_BUILD_NUM}
+          stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}
           property_name: cloud_run_url
           env_var: TEST_URL
       - run:
@@ -33,15 +33,15 @@ jobs:
           command: |
             curl --sSJL $TEST_URL/hello
       - pulumi/destroy:
-          stack: nimbinatus/circleci-pulumi-sample-image/qa_${CIRCLE_BUILD_NUM}
+          stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
           working_directory: ~/repo/infra/image
       - pulumi/destroy:
-          stack: nimbinatus/circleci-pulumi-sample-cloudrun/qa_${CIRCLE_BUILD_NUM}
+          stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}
           working_directory: ~/repo/infra/cloudrun
       - pulumi/stack_rm:
-          stack: nimbinatus/circleci-pulumi-sample-image/qa_${CIRCLE_BUILD_NUM}
+          stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
       - pulumi/stack_rm:
-          stack: nimbinatus/circleci-pulumi-sample-cloudrun/qa_${CIRCLE_BUILD_NUM}
+          stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}
   build:
     docker:
       - image: cimg/python:3.9
@@ -59,7 +59,7 @@ jobs:
           command: |
             pipenv install
       - pulumi/update:
-          stack: nimbinatus/circleci-pulumi-sample-image/dev
+          stack: nimbinatus/docker-image-circleci/dev
           working_directory: ~/repo/infra/image
   deploy:
     docker:
@@ -76,7 +76,7 @@ jobs:
           command: |
             pipenv install
       - pulumi/update:
-          stack: nimbinatus/circleci-pulumi-sample-cloudrun/dev
+          stack: nimbinatus/circleci-pulumi/dev
           working_directory: ~/repo/infra/cloudrun
 workflows:
   version: 2.1
