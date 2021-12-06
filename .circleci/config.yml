@@ -20,10 +20,10 @@ jobs:
             pipenv install
       - pulumi/preview:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
-          working_directory: ~/project/infra/image
+          working_directory: ~/circleci/project/infra/image
       - pulumi/preview:
           stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}
-          working_directory: ~/project/infra/cloudrun
+          working_directory: ~/circleci/project/infra/cloudrun
       - pulumi/stack_output:
           stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}
           property_name: cloud_run_url
@@ -34,10 +34,10 @@ jobs:
             curl --sSJL $TEST_URL/hello
       - pulumi/destroy:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
-          working_directory: ~/project/infra/image
+          working_directory: ~/circleci/project/infra/image
       - pulumi/destroy:
           stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}
-          working_directory: ~/project/infra/cloudrun
+          working_directory: ~/circleci/project/infra/cloudrun
       - pulumi/stack_rm:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
       - pulumi/stack_rm:
@@ -60,7 +60,7 @@ jobs:
             pipenv install
       - pulumi/update:
           stack: nimbinatus/docker-image-circleci/dev
-          working_directory: ~/project/infra/image
+          working_directory: ./infra/image
   deploy:
     docker:
       - image: cimg/python:3.9
@@ -93,6 +93,8 @@ workflows:
               only:
                 - main
       - deploy:
+          requires:
+            - build
           filters:
             branches:
               only:
