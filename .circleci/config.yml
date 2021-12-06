@@ -4,11 +4,12 @@ orbs:
 jobs:
   preview:
     docker:
-      - image: circleci/python:3.9
+      - image: cimg/python:3.9
     working_directory: ~/repo
     steps:
       - checkout
-      - pulumi/login
+      - pulumi/login:
+          access-token: ${PULUMI_ACCESS_TOKEN}
       - run:
           name: Install pipenv
           command: |
@@ -27,7 +28,10 @@ jobs:
           stack: nimbinatus/circleci-pulumi-sample-cloudrun/qa_${CIRCLE_BUILD_NUM}
           property_name: cloud_run_url
           env_var: TEST_URL
-      - ping $TEST_URL
+      - run:
+          name: Test URL
+          command: |
+            curl --sSJL $TEST_URL/hello
       - pulumi/destroy:
           stack: nimbinatus/circleci-pulumi-sample-image/qa_${CIRCLE_BUILD_NUM}
           working_directory: ~/repo/infra/image
@@ -40,11 +44,12 @@ jobs:
           stack: nimbinatus/circleci-pulumi-sample-cloudrun/qa_${CIRCLE_BUILD_NUM}
   build:
     docker:
-      - image: circleci/python:3.9
+      - image: cimg/python:3.9
     working_directory: ~/repo
     steps:
       - checkout
-      - pulumi/login
+      - pulumi/login:
+          access-token: ${PULUMI_ACCESS_TOKEN}
       - run:
           name: Install pipenv
           command: |
@@ -58,7 +63,7 @@ jobs:
           working_directory: ~/repo/infra/image
   deploy:
     docker:
-      - image: circleci/python::3.9
+      - image: cimg/python:3.9
     steps:
       - checkout
       - pulumi/login
