@@ -67,8 +67,8 @@ jobs:
           name: Install dependencies
           command: |
             cd ~/project/infra/cloudrun
-            python -m venv .
-            source venv/bin/activate
+            python -m venv ~/project/infra/cloudrun
+            source ./venv/bin/activate
             pip install -r ~/project/infra/cloudrun/requirements.txt
       - pulumi/update:
           stack: nimbinatus/circleci-pulumi/dev
