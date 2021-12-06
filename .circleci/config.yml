@@ -17,7 +17,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            pip install -r requirements.txt
+            pip install -r ~/circleci/project/infra/image/requirements.txt
 #            pipenv install
       - pulumi/preview:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
@@ -58,7 +58,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            pip install -r requirements.txt
+            pip install -r ~/circleci/project/infra/image/requirements.txt
 #            pipenv install
       - pulumi/update:
           stack: nimbinatus/docker-image-circleci/dev
