@@ -1,0 +1,94 @@
+version: 2.1
+orbs:
+  pulumi: pulumi/pulumi@2.0.0
+jobs:
+  preview:
+    docker:
+      - image: circleci/python:3.9
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - pulumi/login
+      - run:
+          name: Install pipenv
+          command: |
+            pip install -r pipenv
+      - run:
+          name: Install dependencies
+          command: |
+            pipenv install
+      - pulumi/preview:
+          stack: nimbinatus/circleci-pulumi-sample-image/qa_${CIRCLE_BUILD_NUM}
+          working_directory: ~/repo/infra/image
+      - pulumi/preview:
+          stack: nimbinatus/circleci-pulumi-sample-cloudrun/qa_${CIRCLE_BUILD_NUM}
+          working_directory: ~/repo/infra/cloudrun
+      - pulumi/stack_output:
+          stack: nimbinatus/circleci-pulumi-sample-cloudrun/qa_${CIRCLE_BUILD_NUM}
+          property_name: cloud_run_url
+          env_var: TEST_URL
+      - ping $TEST_URL
+      - pulumi/destroy:
+          stack: nimbinatus/circleci-pulumi-sample-image/qa_${CIRCLE_BUILD_NUM}
+          working_directory: ~/repo/infra/image
+      - pulumi/destroy:
+          stack: nimbinatus/circleci-pulumi-sample-cloudrun/qa_${CIRCLE_BUILD_NUM}
+          working_directory: ~/repo/infra/cloudrun
+      - pulumi/stack_rm:
+          stack: nimbinatus/circleci-pulumi-sample-image/qa_${CIRCLE_BUILD_NUM}
+      - pulumi/stack_rm:
+          stack: nimbinatus/circleci-pulumi-sample-cloudrun/qa_${CIRCLE_BUILD_NUM}
+  build:
+    docker:
+      - image: circleci/python:3.9
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - pulumi/login
+      - run:
+          name: Install pipenv
+          command: |
+            pip install -r pipenv
+      - run:
+          name: Install dependencies
+          command: |
+            pipenv install
+      - pulumi/update:
+          stack: nimbinatus/circleci-pulumi-sample-image/dev
+          working_directory: ~/repo/infra/image
+  deploy:
+    docker:
+      - image: circleci/python::3.9
+    steps:
+      - checkout
+      - pulumi/login
+      - run:
+          name: Install pipenv
+          command: |
+            pip install -r pipenv
+      - run:
+          name: Install dependencies
+          command: |
+            pipenv install
+      - pulumi/update:
+          stack: nimbinatus/circleci-pulumi-sample-cloudrun/dev
+          working_directory: ~/repo/infra/cloudrun
+workflows:
+  version: 2.1
+  preview:
+    jobs:
+      - pulumi_preview:
+          filters:
+            branches:
+              ignore:
+                - main
+      - build:
+          filters:
+            branches:
+              only:
+                - main
+      - deploy:
+          filters:
+            branches:
+              only:
+                - main

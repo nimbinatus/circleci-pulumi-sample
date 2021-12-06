@@ -10,10 +10,14 @@ path = Path(os.getcwd())
 config = pulumi.Config()
 
 gimage = "gunicorn-image"
+if 'CIRCLE_BRANCH' in os.environ and os.environ['CIRCLE_BRANCH'] != 'main':
+    tag = os.environ['CIRCLE_BUILD_NUM']
+else:
+    tag = 'latest'
 gunicorn_image = docker.Image(
     gimage,
     build=f'{path.parents[1]}/api',
-    image_name=f'gcr.io/{pulumi.Config("gcp").require("project")}/{gimage}:latest'
+    image_name=f'gcr.io/{pulumi.Config("gcp").require("project")}/{gimage}:{tag}'
 )
 
 # pulumi.export("digest", gunicorn_image.digest)
