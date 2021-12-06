@@ -82,7 +82,7 @@ workflows:
   version: 2.1
   preview:
     jobs:
-      - pulumi_preview:
+      - preview:
           filters:
             branches:
               ignore:
