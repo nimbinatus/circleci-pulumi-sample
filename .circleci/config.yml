@@ -91,6 +91,8 @@ workflows:
               ignore:
                 - main
       - build:
+          requires:
+            - install_gcloud
           filters:
             branches:
               only:
