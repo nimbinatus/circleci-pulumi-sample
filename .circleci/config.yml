@@ -57,6 +57,8 @@ jobs:
       - image: cimg/python:3.9
     steps:
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: false
       - pulumi/login:
           access-token: ${PULUMI_ACCESS_TOKEN}
       - run:
