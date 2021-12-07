@@ -24,6 +24,8 @@ try:
         image_name=f'gcr.io/{pulumi.Config("gcp").require("project")}/{gimage}:{tag}'
     )
 except pulumi_docker.docker.ResourceError:
-    raise(f"Failure: {pulumi_docker.docker.ResourceError.args}")
+    raise f"Failure: {pulumi_docker.docker.ResourceError.args}"
+finally:
+    print("whoops")
 
 # pulumi.export("digest", gunicorn_image.digest)
