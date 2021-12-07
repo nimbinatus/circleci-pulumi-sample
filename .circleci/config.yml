@@ -1,7 +1,14 @@
 version: 2.1
 orbs:
   pulumi: pulumi/pulumi@2.0.0
+  gcp-cli: circleci/gcp-cli@1.0.0
 jobs:
+  install_and_configure_cli:
+    executor: default
+    steps:
+      - gcp-cli/install_and_initialize_cli:
+          context: myContext
+          executor: gcp-cli/default
   preview:
     docker:
       - image: cimg/python:3.9
@@ -55,7 +62,7 @@ jobs:
             source ./venv/bin/activate
             pip install -r ~/project/infra/image/requirements.txt
             docker --version
-            gcloud auth configure-docker
+            echo $GOOGLE_CREDENTIALS | gcloud auth configure-docker
       - pulumi/update:
           stack: nimbinatus/docker-image-circleci/dev
           working_directory: ~/project/infra/image
