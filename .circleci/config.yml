@@ -77,7 +77,8 @@ jobs:
             ./google-cloud-sdk/install.sh  --quiet
             echo 'export PATH=$PATH:~/google-cloud-sdk/bin:~/.local/bin' >> $BASH_ENV
             source $BASH_ENV
-            gcloud auth activate-service-account --key-file ${HOME}/project/gcp/creds.json
+            gcloud version
+#            gcloud auth activate-service-account --key-file ${HOME}/project/gcp/creds.json
       - run:
           name: Set up GCP
           command: |
