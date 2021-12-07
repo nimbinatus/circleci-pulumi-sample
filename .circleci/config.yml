@@ -13,7 +13,7 @@ jobs:
           name: Install dependencies
           command: |
             cd ~/project/infra/cloudrun
-            python -m venv ~/project/infra/image
+            python -m venv ~/project/infra/image/venv
             source ./venv/bin/activate
             pip install -r ~/project/infra/image/requirements.txt
       - pulumi/preview:
@@ -54,6 +54,7 @@ jobs:
             python -m venv ~/project/infra/image/venv
             source ./venv/bin/activate
             pip install -r ~/project/infra/image/requirements.txt
+            docker --version
       - pulumi/update:
           stack: nimbinatus/docker-image-circleci/dev
           working_directory: ~/project/infra/image
@@ -67,7 +68,7 @@ jobs:
           name: Install dependencies
           command: |
             cd ~/project/infra/cloudrun
-            python -m venv ~/project/infra/cloudrun
+            python -m venv ~/project/infra/cloudrun/venv
             source ./venv/bin/activate
             pip install -r ~/project/infra/cloudrun/requirements.txt
       - pulumi/update:
