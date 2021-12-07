@@ -3,14 +3,11 @@ orbs:
   pulumi: pulumi/pulumi@2.0.0
   gcp-cli: circleci/gcp-cli@1.0.0
 jobs:
-  install_gcloud:
-    executor: gcp-cli/default
-    steps:
-      - gcp-cli/install
   preview:
     docker:
       - image: cimg/python:3.9
     steps:
+      - gcp-cli/install
       - checkout
       - pulumi/login:
           access-token: ${PULUMI_ACCESS_TOKEN}
@@ -49,6 +46,7 @@ jobs:
     docker:
       - image: cimg/python:3.9
     steps:
+      - gcp-cli/install
       - checkout
       - pulumi/login:
           access-token: ${PULUMI_ACCESS_TOKEN}
@@ -68,6 +66,7 @@ jobs:
     docker:
       - image: cimg/python:3.9
     steps:
+      - gcp-cli/install
       - checkout
       - pulumi/login
       - run:
@@ -84,15 +83,12 @@ workflows:
   version: 2.1
   preview:
     jobs:
-      - install_gcloud
       - preview:
           filters:
             branches:
               ignore:
                 - main
       - build:
-          requires:
-            - install_gcloud
           filters:
             branches:
               only:
