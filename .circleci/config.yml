@@ -73,12 +73,12 @@ jobs:
             cd ~/
             curl -o gcp-cli.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/google-cloud-sdk.tar.gz
             tar -xzf gcp-cli.tar.gz
-            echo ${GOOGLE_CREDENTIALS} | base64 --decode --ignore-garbage > ~/project/creds.json
+#            echo ${GOOGLE_CREDENTIALS} | base64 --decode --ignore-garbage > ~/project/creds.json
             ./google-cloud-sdk/install.sh  --quiet
             echo 'export PATH=$PATH:~/google-cloud-sdk/bin:~/.local/bin' >> $BASH_ENV
             source $BASH_ENV
             gcloud version
-            gcloud auth activate-service-account --key-file ~/project/creds.json
+            echo ${GOOGLE_CREDENTIALS} | gcloud auth activate-service-account
       - run:
           name: Set up GCP
           command: |
