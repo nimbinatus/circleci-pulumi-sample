@@ -26,7 +26,6 @@ try:
     )
 except pulumi_docker.docker.ResourceError as err:
     print(f"Failure: {err}")
-    raise
 finally:
     print("whoops")
 
