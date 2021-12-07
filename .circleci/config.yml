@@ -59,9 +59,9 @@ jobs:
             docker --version
       - gcp-cli/install
       - run:
-          - name: Set up GCP
-            command: |
-              echo $GOOGLE_CREDENTIALS | gcloud auth configure-docker
+          name: Set up GCP
+          command: |
+            echo $GOOGLE_CREDENTIALS | gcloud auth configure-docker
       - pulumi/update:
           stack: nimbinatus/docker-image-circleci/dev
           working_directory: ~/project/infra/image
