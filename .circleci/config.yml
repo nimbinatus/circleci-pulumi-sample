@@ -80,8 +80,17 @@ jobs:
             python -m venv ~/project/infra/cloudrun/venv
             source ./venv/bin/activate
             pip install -r ~/project/infra/cloudrun/requirements.txt
-      - gcp-cli/install
-      - gcp-cli/initialize
+      - run:
+          name: Install dependencies
+          command: |
+            cd ~/
+            curl -o gcp-cli.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/google-cloud-sdk.tar.gz
+            tar -xzf gcp-cli.tar.gz
+            echo ${GOOGLE_CREDENTIALS | base64 --decode --ignore-garbage > ${HOME}/project/gcp/creds.json
+            ./google-cloud-sdk/install.sh  --quiet
+            echo 'export PATH=$PATH:~/google-cloud-sdk/bin:~/.local/bin' >> $BASH_ENV
+            source $BASH_ENV
+            gcloud auth activate-service-account --key-file ${HOME}/project/gcp/creds.json
       - pulumi/update:
           stack: nimbinatus/circleci-pulumi/dev
           working_directory: ~/project/infra/cloudrun
