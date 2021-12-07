@@ -17,8 +17,17 @@ jobs:
             python -m venv ~/project/infra/image/venv
             source ./venv/bin/activate
             pip install -r ~/project/infra/image/requirements.txt
-      - gcp-cli/install
-      - gcp-cli/initialize
+      - run:
+          name: Install and init gcloud
+          command: |
+            cd ~/
+            curl -o gcp-cli.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/google-cloud-sdk.tar.gz
+            tar -xzf gcp-cli.tar.gz
+            echo ${GOOGLE_CREDENTIALS} | base64 --decode --ignore-garbage > ${HOME}/project/gcp/creds.json
+            ./google-cloud-sdk/install.sh  --quiet
+            echo 'export PATH=$PATH:~/google-cloud-sdk/bin:~/.local/bin' >> $BASH_ENV
+            source $BASH_ENV
+            gcloud auth activate-service-account --key-file ${HOME}/project/gcp/creds.json
       - pulumi/preview:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
           working_directory: ~/project/infra/image
@@ -58,12 +67,21 @@ jobs:
             source ./venv/bin/activate
             pip install -r ~/project/infra/image/requirements.txt
             docker --version
-      - gcp-cli/install
-      - gcp-cli/initialize
+      - run:
+          name: Install and init gcloud
+          command: |
+            cd ~/
+            curl -o gcp-cli.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/google-cloud-sdk.tar.gz
+            tar -xzf gcp-cli.tar.gz
+            echo ${GOOGLE_CREDENTIALS} | base64 --decode --ignore-garbage > ${HOME}/project/gcp/creds.json
+            ./google-cloud-sdk/install.sh  --quiet
+            echo 'export PATH=$PATH:~/google-cloud-sdk/bin:~/.local/bin' >> $BASH_ENV
+            source $BASH_ENV
+            gcloud auth activate-service-account --key-file ${HOME}/project/gcp/creds.json
       - run:
           name: Set up GCP
           command: |
-            echo $GOOGLE_CREDENTIALS | gcloud auth configure-docker
+            echo ${GOOGLE_CREDENTIALS} | gcloud auth configure-docker
       - pulumi/update:
           stack: nimbinatus/docker-image-circleci/dev
           working_directory: ~/project/infra/image
@@ -81,12 +99,12 @@ jobs:
             source ./venv/bin/activate
             pip install -r ~/project/infra/cloudrun/requirements.txt
       - run:
-          name: Install dependencies
+          name: Install and init gcloud
           command: |
             cd ~/
             curl -o gcp-cli.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/google-cloud-sdk.tar.gz
             tar -xzf gcp-cli.tar.gz
-            echo ${GOOGLE_CREDENTIALS | base64 --decode --ignore-garbage > ${HOME}/project/gcp/creds.json
+            echo ${GOOGLE_CREDENTIALS} | base64 --decode --ignore-garbage > ${HOME}/project/gcp/creds.json
             ./google-cloud-sdk/install.sh  --quiet
             echo 'export PATH=$PATH:~/google-cloud-sdk/bin:~/.local/bin' >> $BASH_ENV
             source $BASH_ENV
