@@ -6,6 +6,8 @@ import pulumi
 import pulumi_docker as docker
 from pathlib import Path
 
+import pulumi_docker.docker
+
 path = Path(os.getcwd())
 config = pulumi.Config()
 
@@ -15,11 +17,13 @@ if 'CIRCLE_BRANCH' in os.environ and os.environ['CIRCLE_BRANCH'] != 'main':
 else:
     tag = 'latest'
 
-print(f'gcr.io/{pulumi.Config("gcp").require("project")}/{gimage}:{tag}')
-gunicorn_image = docker.Image(
-    gimage,
-    build=f'{path.parents[1]}/api',
-    image_name=f'gcr.io/{pulumi.Config("gcp").require("project")}/{gimage}:{tag}'
-)
+try:
+    gunicorn_image = docker.Image(
+        gimage,
+        build=f'{path.parents[1]}/api',
+        image_name=f'gcr.io/{pulumi.Config("gcp").require("project")}/{gimage}:{tag}'
+    )
+except pulumi_docker.docker.ResourceError:
+    raise(f"Failure: {pulumi_docker.docker.ResourceError.args}")
 
 # pulumi.export("digest", gunicorn_image.digest)

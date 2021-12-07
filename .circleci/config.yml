@@ -55,6 +55,7 @@ jobs:
             source ./venv/bin/activate
             pip install -r ~/project/infra/image/requirements.txt
             docker --version
+            gcloud auth configure-docker
       - pulumi/update:
           stack: nimbinatus/docker-image-circleci/dev
           working_directory: ~/project/infra/image
