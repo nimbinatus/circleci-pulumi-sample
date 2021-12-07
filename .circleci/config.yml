@@ -3,12 +3,10 @@ orbs:
   pulumi: pulumi/pulumi@2.0.0
   gcp-cli: circleci/gcp-cli@1.0.0
 jobs:
-  install_and_configure_cli:
+  install_gcloud:
     executor: default
     steps:
-      - gcp-cli/install_and_initialize_cli:
-          context: myContext
-          executor: gcp-cli/default
+      - gcp-cli/install
   preview:
     docker:
       - image: cimg/python:3.9
@@ -86,6 +84,7 @@ workflows:
   version: 2.1
   preview:
     jobs:
+      - install_gcloud
       - preview:
           filters:
             branches:
