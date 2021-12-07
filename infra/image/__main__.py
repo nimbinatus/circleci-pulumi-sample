@@ -14,6 +14,8 @@ if 'CIRCLE_BRANCH' in os.environ and os.environ['CIRCLE_BRANCH'] != 'main':
     tag = os.environ['CIRCLE_BUILD_NUM']
 else:
     tag = 'latest'
+
+print(f'gcr.io/{pulumi.Config("gcp").require("project")}/{gimage}:{tag}')
 gunicorn_image = docker.Image(
     gimage,
     build=f'{path.parents[1]}/api',
