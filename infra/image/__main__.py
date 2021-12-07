@@ -21,7 +21,8 @@ try:
     gunicorn_image = docker.Image(
         gimage,
         build=f'{path.parents[1]}/api',
-        image_name=f'gcr.io/{pulumi.Config("gcp").require("project")}/{gimage}:{tag}'
+        # image_name=f'gcr.io/{pulumi.Config("gcp").require("project")}/{gimage}:{tag}'
+        image_name="testme:latest"
     )
 except pulumi_docker.docker.ResourceError as err:
     print(f"Failure: {err}")
