@@ -17,6 +17,9 @@ if 'CIRCLE_BRANCH' in os.environ and os.environ['CIRCLE_BRANCH'] != 'main':
 else:
     tag = 'latest'
 
+for root, dirs, files in os.walk(f'{path.parents[1]}/api'):
+    print(files)
+
 try:
     gunicorn_image = docker.Image(
         gimage,
