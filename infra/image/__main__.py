@@ -23,8 +23,9 @@ try:
         build=f'{path.parents[1]}/api',
         image_name=f'gcr.io/{pulumi.Config("gcp").require("project")}/{gimage}:{tag}'
     )
-except pulumi_docker.docker.ResourceError:
-    raise f"Failure: {pulumi_docker.docker.ResourceError.args}"
+except pulumi_docker.docker.ResourceError as err:
+    print(f"Failure: {err}")
+    raise
 finally:
     print("whoops")
 
