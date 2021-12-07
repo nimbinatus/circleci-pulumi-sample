@@ -84,8 +84,9 @@ jobs:
           command: |
             echo ${GOOGLE_CREDENTIALS} >> ~/project/creds.json
             gcloud auth activate-service-account --key-file ~/project/creds.json
-            echo ${GOOGLE_CREDENTIALS} | gcloud auth configure-docker
+            gcloud auth configure-docker
             gcloud auth list --filter=status:ACTIVE --format="value(account)"
+            cat ~/.docker/config.json
       - pulumi/update:
           stack: nimbinatus/docker-image-circleci/dev
           working_directory: ~/project/infra/image
