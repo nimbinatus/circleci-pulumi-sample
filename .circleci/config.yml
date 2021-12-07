@@ -4,7 +4,7 @@ orbs:
   gcp-cli: circleci/gcp-cli@1.0.0
 jobs:
   install_gcloud:
-    executor: default
+    executor: gcp-cli/default
     steps:
       - gcp-cli/install
   preview:
