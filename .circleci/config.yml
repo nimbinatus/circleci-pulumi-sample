@@ -7,7 +7,6 @@ jobs:
     docker:
       - image: cimg/python:3.9
     steps:
-      - gcp-cli/install
       - checkout
       - pulumi/login:
           access-token: ${PULUMI_ACCESS_TOKEN}
@@ -18,6 +17,7 @@ jobs:
             python -m venv ~/project/infra/image/venv
             source ./venv/bin/activate
             pip install -r ~/project/infra/image/requirements.txt
+      - gcp-cli/install
       - pulumi/preview:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
           working_directory: ~/project/infra/image
@@ -46,7 +46,6 @@ jobs:
     docker:
       - image: cimg/python:3.9
     steps:
-      - gcp-cli/install
       - checkout
       - pulumi/login:
           access-token: ${PULUMI_ACCESS_TOKEN}
@@ -58,7 +57,11 @@ jobs:
             source ./venv/bin/activate
             pip install -r ~/project/infra/image/requirements.txt
             docker --version
-            echo $GOOGLE_CREDENTIALS | gcloud auth configure-docker
+      - gcp-cli/install
+      - run:
+          - name: Set up GCP
+            command: |
+              echo $GOOGLE_CREDENTIALS | gcloud auth configure-docker
       - pulumi/update:
           stack: nimbinatus/docker-image-circleci/dev
           working_directory: ~/project/infra/image
