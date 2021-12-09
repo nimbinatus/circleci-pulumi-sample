@@ -86,7 +86,8 @@ jobs:
             gcloud auth activate-service-account --key-file ~/project/creds.json
             gcloud auth configure-docker
             sudo apt-get install jq
-            service_acct=($(jq -r '.client_email' ~/project/creds.json)) 
+            service_acct=($(jq -r '.client_email' ~/project/creds.json))
+            echo ${service_acct}
             gcloud iam service-accounts describe ${service_acct[1]}
       - pulumi/update:
           stack: nimbinatus/docker-image-circleci/dev
