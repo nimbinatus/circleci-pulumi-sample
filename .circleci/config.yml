@@ -78,7 +78,6 @@ jobs:
             ./google-cloud-sdk/install.sh  --quiet
             echo 'export PATH=$PATH:~/google-cloud-sdk/bin:~/.local/bin' >> $BASH_ENV
             source $BASH_ENV
-            gcloud version
       - run:
           name: Set up GCP
           command: |
