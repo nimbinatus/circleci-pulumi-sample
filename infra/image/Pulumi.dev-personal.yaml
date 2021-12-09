@@ -1,0 +1,4 @@
+config:
+  gcp:project: phrasal-vent-317819
+  gcp:region: us-central1
+  gcp:zone: us-central1-a

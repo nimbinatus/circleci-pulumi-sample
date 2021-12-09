@@ -84,12 +84,11 @@ jobs:
           command: |
             echo ${GOOGLE_CREDENTIALS} >> ~/project/creds.json
             gcloud auth activate-service-account --key-file ~/project/creds.json
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
             gcloud auth configure-docker
-            sudo apt-get install jq
-            service_acct=($(jq -r '.client_email' ~/project/creds.json))
-            gcloud iam service-accounts describe $service_acct
       - pulumi/update:
-          stack: nimbinatus/docker-image-circleci/dev
+          stack: nimbinatus/docker-image-circleci/dev-personal
           working_directory: ~/project/infra/image
   deploy:
     docker:
@@ -116,7 +115,7 @@ jobs:
             source $BASH_ENV
             gcloud auth activate-service-account --key-file ${HOME}/project/gcp/creds.json
       - pulumi/update:
-          stack: nimbinatus/circleci-pulumi/dev
+          stack: nimbinatus/circleci-pulumi/dev-personal
           working_directory: ~/project/infra/cloudrun
 workflows:
   version: 2.1
