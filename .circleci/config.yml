@@ -23,11 +23,11 @@ jobs:
             cd ~/
             curl -o gcp-cli.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/google-cloud-sdk.tar.gz
             tar -xzf gcp-cli.tar.gz
-            echo ${GOOGLE_CREDENTIALS} | base64 --decode --ignore-garbage > ${HOME}/project/gcp/creds.json
+            echo ${GOOGLE_CREDENTIALS} | base64 --decode --ignore-garbage > ${HOME}/project/creds.json
             ./google-cloud-sdk/install.sh  --quiet
             echo 'export PATH=$PATH:~/google-cloud-sdk/bin:~/.local/bin' >> $BASH_ENV
             source $BASH_ENV
-            gcloud auth activate-service-account --key-file ${HOME}/project/gcp/creds.json
+            gcloud auth activate-service-account --key-file ${HOME}/project/creds.json
       - pulumi/preview:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
           working_directory: ~/project/infra/image
@@ -109,11 +109,11 @@ jobs:
             cd ~/
             curl -o gcp-cli.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/google-cloud-sdk.tar.gz
             tar -xzf gcp-cli.tar.gz
-            echo ${GOOGLE_CREDENTIALS} | base64 --decode --ignore-garbage > ${HOME}/project/gcp/creds.json
+            echo ${GOOGLE_CREDENTIALS} | base64 --decode --ignore-garbage > ${HOME}/project/creds.json
             ./google-cloud-sdk/install.sh  --quiet
             echo 'export PATH=$PATH:~/google-cloud-sdk/bin:~/.local/bin' >> $BASH_ENV
             source $BASH_ENV
-            gcloud auth activate-service-account --key-file ${HOME}/project/gcp/creds.json
+            gcloud auth activate-service-account --key-file ${HOME}/project/creds.json
       - pulumi/update:
           stack: nimbinatus/circleci-pulumi/dev-personal
           working_directory: ~/project/infra/cloudrun
