@@ -13,33 +13,21 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            sudo apt-get update
             cd ~/project/infra/cloudrun
             python -m venv ~/project/infra/image/venv
             source ./venv/bin/activate
             pip install -r ~/project/infra/image/requirements.txt
       - run:
-          name: Install gcloud properly
+          name: Install and init gcloud
           command: |
             cd ~/
             curl -o gcp-cli.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/google-cloud-sdk.tar.gz
             tar -xzf gcp-cli.tar.gz
+            echo ${GOOGLE_CREDENTIALS} >> ${HOME}/project/creds.json
             ./google-cloud-sdk/install.sh  --quiet
             echo 'export PATH=$PATH:~/google-cloud-sdk/bin:~/.local/bin' >> $BASH_ENV
             source $BASH_ENV
-      - gcp-cli/initialize:
-          gcloud-service-key: GOOGLE_CREDENTIALS
-#      - run:
-#          name: Install and init gcloud
-#          command: |
-#            cd ~/
-#            curl -o gcp-cli.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/google-cloud-sdk.tar.gz
-#            tar -xzf gcp-cli.tar.gz
-#            echo ${GOOGLE_CREDENTIALS} >> ${HOME}/project/creds.json
-#            ./google-cloud-sdk/install.sh  --quiet
-#            echo 'export PATH=$PATH:~/google-cloud-sdk/bin:~/.local/bin' >> $BASH_ENV
-#            source $BASH_ENV
-#            gcloud auth activate-service-account --key-file ${HOME}/project/creds.json
+            gcloud auth activate-service-account --key-file ${HOME}/project/creds.json
       - pulumi/preview:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
           working_directory: ~/project/infra/image
@@ -76,13 +64,13 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            sudo apt-get update
             cd ~/project/infra/image
             python -m venv ~/project/infra/image/venv
             source ./venv/bin/activate
             pip install -r ~/project/infra/image/requirements.txt
+            docker --version
       - run:
-          name: Install gcloud properly
+          name: Install and init gcloud
           command: |
             cd ~/
             curl -o gcp-cli.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/google-cloud-sdk.tar.gz
@@ -90,29 +78,14 @@ jobs:
             ./google-cloud-sdk/install.sh  --quiet
             echo 'export PATH=$PATH:~/google-cloud-sdk/bin:~/.local/bin' >> $BASH_ENV
             source $BASH_ENV
-      - gcp-cli/initialize:
-          gcloud-service-key: GOOGLE_CREDENTIALS
       - run:
-          name: Init GCP Docker
+          name: Set up GCP
           command: |
+            echo ${GOOGLE_CREDENTIALS} >> ~/project/creds.json
+            gcloud auth activate-service-account --key-file ~/project/creds.json
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
             gcloud auth configure-docker
-#      - run:
-#          name: Install and init gcloud
-#          command: |
-#            cd ~/
-#            curl -o gcp-cli.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/google-cloud-sdk.tar.gz
-#            tar -xzf gcp-cli.tar.gz
-#            ./google-cloud-sdk/install.sh  --quiet
-#            echo 'export PATH=$PATH:~/google-cloud-sdk/bin:~/.local/bin' >> $BASH_ENV
-#            source $BASH_ENV
-#      - run:
-#          name: Set up GCP
-#          command: |
-#            echo ${GOOGLE_CREDENTIALS} >> ~/project/creds.json
-#            gcloud auth activate-service-account --key-file ~/project/creds.json
-#            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-#            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
-#            gcloud auth configure-docker
       - pulumi/update:
           stack: nimbinatus/docker-image-circleci/dev-personal
           working_directory: ~/project/infra/image
@@ -125,33 +98,21 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            sudo apt-get update
             cd ~/project/infra/cloudrun
             python -m venv ~/project/infra/cloudrun/venv
             source ./venv/bin/activate
             pip install -r ~/project/infra/cloudrun/requirements.txt
       - run:
-          name: Install gcloud properly
+          name: Install and init gcloud
           command: |
             cd ~/
             curl -o gcp-cli.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/google-cloud-sdk.tar.gz
             tar -xzf gcp-cli.tar.gz
+            echo ${GOOGLE_CREDENTIALS} >> ${HOME}/project/creds.json
             ./google-cloud-sdk/install.sh  --quiet
             echo 'export PATH=$PATH:~/google-cloud-sdk/bin:~/.local/bin' >> $BASH_ENV
             source $BASH_ENV
-      - gcp-cli/initialize:
-          gcloud-service-key: GOOGLE_CREDENTIALS
-#      - run:
-#          name: Install and init gcloud
-#          command: |
-#            cd ~/
-#            curl -o gcp-cli.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/google-cloud-sdk.tar.gz
-#            tar -xzf gcp-cli.tar.gz
-#            echo ${GOOGLE_CREDENTIALS} >> ${HOME}/project/creds.json
-#            ./google-cloud-sdk/install.sh  --quiet
-#            echo 'export PATH=$PATH:~/google-cloud-sdk/bin:~/.local/bin' >> $BASH_ENV
-#            source $BASH_ENV
-#            gcloud auth activate-service-account --key-file ${HOME}/project/creds.json
+            gcloud auth activate-service-account --key-file ${HOME}/project/creds.json
       - pulumi/update:
           stack: nimbinatus/circleci-pulumi/dev-personal
           working_directory: ~/project/infra/cloudrun
