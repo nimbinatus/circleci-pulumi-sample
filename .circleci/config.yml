@@ -17,7 +17,8 @@ jobs:
             python -m venv ~/project/infra/image/venv
             source ./venv/bin/activate
             pip install -r ~/project/infra/image/requirements.txt
-      - gcp-cli/install_and_initialize_cli
+      - gcp-cli/install
+      - gcp-cli/initialize
 #      - run:
 #          name: Install and init gcloud
 #          command: |
@@ -70,7 +71,8 @@ jobs:
             source ./venv/bin/activate
             pip install -r ~/project/infra/image/requirements.txt
             docker --version
-      - gcp-cli/install_and_initialize_cli
+      - gcp-cli/install
+      - gcp-cli/initialize
 #      - run:
 #          name: Install and init gcloud
 #          command: |
@@ -104,7 +106,8 @@ jobs:
             python -m venv ~/project/infra/cloudrun/venv
             source ./venv/bin/activate
             pip install -r ~/project/infra/cloudrun/requirements.txt
-      - gcp-cli/install_and_initialize_cli
+      - gcp-cli/install
+      - gcp-cli/initialize
 #      - run:
 #          name: Install and init gcloud
 #          command: |
