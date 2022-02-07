@@ -21,10 +21,10 @@ jobs:
       - gcp-cli/initialize
       - pulumi/preview:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
-          working_directory: ~/project/gcp-infra/image
+          working_directory: ~/project/infra/image
       - pulumi/preview:
           stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}
-          working_directory: ~/project/gcp-infra/cloudrun
+          working_directory: ~/project/infra/cloudrun
       - pulumi/stack_output:
           stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}
           property_name: cloud_run_url
@@ -35,10 +35,10 @@ jobs:
             curl --sSJL $TEST_URL/hello
       - pulumi/destroy:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
-          working_directory: ~/project/gcp-infra/image
+          working_directory: ~/project/infra/image
       - pulumi/destroy:
           stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}
-          working_directory: ~/project/gcp-infra/cloudrun
+          working_directory: ~/project/infra/cloudrun
       - pulumi/stack_rm:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
       - pulumi/stack_rm:
@@ -64,7 +64,7 @@ jobs:
       - gcp-cli/initialize
       - pulumi/update:
           stack: nimbinatus/docker-image-circleci/dev-personal
-          working_directory: ~/project/gcp-infra/image
+          working_directory: ~/project/infra/image
   deploy:
     docker:
       - image: cimg/python:3.9
@@ -82,7 +82,7 @@ jobs:
       - gcp-cli/initialize
       - pulumi/update:
           stack: nimbinatus/circleci-pulumi/dev-personal
-          working_directory: ~/project/gcp-infra/cloudrun
+          working_directory: ~/project/infra/cloudrun
 workflows:
   version: 2.1
   preview:
