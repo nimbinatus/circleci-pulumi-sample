@@ -20,12 +20,12 @@ else:
 
 try:
     print('attempting')
-    gcp_native.artifactregistry.v1beta2.get_repository(
+    registry = gcp_native.artifactregistry.v1beta2.get_repository(
         repository_id=f'{gimage}'
     )
 except Exception as err:
     print(f'No artifact registry by that name: {err}. Spinning one up.')
-    gcp_native.artifactregistry.v1beta2.Repository(
+    registry = gcp_native.artifactregistry.v1beta2.Repository(
         f'{gimage}',
         location=f'{pulumi.Config("google-native").require("region")}',
         repository_id=f'{gimage}',
@@ -37,7 +37,8 @@ try:
     gunicorn_image = docker.Image(
         gimage,
         build=f'{path.parents[1]}/api',
-        image_name=f'us-central-docker.pkg.dev/{pulumi.Config("google-native").require("project")}/{gimage}/{gimage}:{tag}'
+        image_name=f'us-central-docker.pkg.dev/{pulumi.Config("google-native").require("project")}/{gimage}/{gimage}:{tag}',
+        opts=pulumi.ResourceOptions(depends_on=registry)
     )
 except pulumi_docker.docker.ResourceError as err:
     print(f"Failure: {err}")
