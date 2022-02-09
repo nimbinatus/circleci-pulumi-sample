@@ -22,7 +22,7 @@ try:
         resource_name=f'{pulumi.Config("gcp").require("project")}',
         id=f'{pulumi.Config("gcp").require("project")}'
     )
-except pulumi_docker.docker.ResourceError as err:
+except Exception as err:
     print(f'No artifact registry by that name: {err}. Spinning one up.')
     gcp.artifactregistry.Repository(
         f'{gimage}',
