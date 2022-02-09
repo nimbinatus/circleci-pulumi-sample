@@ -18,17 +18,18 @@ else:
     tag = 'latest'
 
 try:
+    print('attempting')
     gcp.artifactregistry.Repository.get(
-        resource_name=f'{pulumi.Config("gcp").require("project")}',
-        id=f'{pulumi.Config("gcp").require("project")}'
+        resource_name=f'{gimage}',
+        id=f'{gimage}'
     )
 except Exception as err:
     print(f'No artifact registry by that name: {err}. Spinning one up.')
     gcp.artifactregistry.Repository(
         f'{gimage}',
-        location=f'{pulumi.Config("gcp").require("region")}',
+        # location=f'{pulumi.Config("gcp").require("region")}',
         repository_id=f'{gimage}',
-        description="repo for docker images for test run",
+        # description="repo for docker images for test run",
         format="DOCKER",
     )
 
