@@ -2,7 +2,8 @@
 
 import os
 import pulumi
-import pulumi_gcp as gcp
+# import pulumi_gcp as gcp
+import pulumi_google_native as gcp_native
 import pulumi_docker as docker
 from pathlib import Path
 
@@ -19,27 +20,26 @@ else:
 
 try:
     print('attempting')
-    gcp.artifactregistry.Repository.get(
-        resource_name=f'{gimage}',
-        id=f'{gimage}'
+    gcp_native.artifactregistry.v1beta2.get_repository(
+        repository_id=f'{gimage}'
     )
 except Exception as err:
     print(f'No artifact registry by that name: {err}. Spinning one up.')
-    gcp.artifactregistry.Repository(
-        f'{gimage}',
-        # location=f'{pulumi.Config("gcp").require("region")}',
-        repository_id=f'{gimage}',
+    # gcp_native.artifactregistry.v1beta2.Repository(
+    #     f'{gimage}',
+    #     location=f'{pulumi.Config("gcp").require("region")}',
+        # repository_id=f'{gimage}',
         # description="repo for docker images for test run",
-        format="DOCKER",
-    )
+        # format=gcp_native.artifactregistry.v1beta2.RepositoryFormat("DOCKER"),
+    # )
 
-try:
-    gunicorn_image = docker.Image(
-        gimage,
-        build=f'{path.parents[1]}/api',
-        image_name=f'us-central-docker.pkg.dev/{pulumi.Config("gcp").require("project")}/{gimage}/{gimage}:{tag}'
-    )
-except pulumi_docker.docker.ResourceError as err:
-    print(f"Failure: {err}")
+# try:
+#     gunicorn_image = docker.Image(
+#         gimage,
+#         build=f'{path.parents[1]}/api',
+#         image_name=f'us-central-docker.pkg.dev/{pulumi.Config("gcp").require("project")}/{gimage}/{gimage}:{tag}'
+#     )
+# except pulumi_docker.docker.ResourceError as err:
+#     print(f"Failure: {err}")
 
 # pulumi.export("digest", gunicorn_image.digest)
