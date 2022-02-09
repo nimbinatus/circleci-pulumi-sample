@@ -18,7 +18,7 @@ else:
     tag = 'latest'
 
 try:
-    gcp.artifactregistry.get(
+    gcp.artifactregistry.Repository.get(
         resource_name=f'{pulumi.Config("gcp").require("project")}',
         id=f'{pulumi.Config("gcp").require("project")}'
     )
