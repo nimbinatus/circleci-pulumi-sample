@@ -40,7 +40,7 @@ try:
     gunicorn_image = docker.Image(
         gimage,
         build=f'{path.parents[1]}/api',
-        image_name=f'{pulumi.Config("google-native").require("region")}-docker.pkg.dev/{pulumi.Config("google-native").require("project")}/{gimage}/{gimage}:{tag}',
+        image_name=f'{pulumi.Config("google-native").require("region")}-docker.pkg.dev/{registry.name}/{gimage}:{tag}',
         # opts=pulumi.ResourceOptions(depends_on=registry)
     )
 except pulumi_docker.docker.ResourceError as err:
