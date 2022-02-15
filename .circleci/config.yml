@@ -20,7 +20,7 @@ jobs:
             pip install -r ~/project/infra/image/requirements.txt
       - gcp-cli/install
       - gcp-cli/initialize
-      - gcp-gcr/gcr-auth
+      - gcp-gcr/gcr-auth:
           registry-url: us-central1-docker.pkg.dev
       - pulumi/preview:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
@@ -65,7 +65,7 @@ jobs:
             docker --version
       - gcp-cli/install
       - gcp-cli/initialize
-      - gcp-gcr/gcr-auth
+      - gcp-gcr/gcr-auth:
           registry-url: us-central1-docker.pkg.dev
       - pulumi/update:
           stack: nimbinatus/docker-image-circleci/dev-personal
@@ -85,9 +85,8 @@ jobs:
             pip install -r ~/project/infra/cloudrun/requirements.txt
       - gcp-cli/install
       - gcp-cli/initialize
-      - gcp-gcr/gcr-auth
-          parameters:
-            registry-url: us-central1-docker.pkg.dev
+      - gcp-gcr/gcr-auth:
+          registry-url: us-central1-docker.pkg.dev
       - pulumi/update:
           stack: nimbinatus/circleci-pulumi/dev-personal
           working_directory: ~/project/infra/cloudrun
