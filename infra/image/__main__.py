@@ -62,6 +62,6 @@ try:
         opts=pulumi.ResourceOptions(depends_on=[registry])
     )
     pulumi.export("image name", gunicorn_image.image_name)
-except pulumi_docker.docker.ResourceError as err:
+except docker.ResourceError as err:
     print(f"Failure: {err}")
 

@@ -9,6 +9,7 @@ gunicorn = "*"
 pulumi = "*"
 pulumi-docker = "*"
 pulumi-gcp = "*"
+pulumi-google-native = "*"
 
 [dev-packages]
 
