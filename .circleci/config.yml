@@ -86,7 +86,8 @@ jobs:
       - gcp-cli/install
       - gcp-cli/initialize
       - gcp-gcr/gcr-auth
-          registry-url: us-central1-docker.pkg.dev
+          parameters:
+            registry-url: us-central1-docker.pkg.dev
       - pulumi/update:
           stack: nimbinatus/circleci-pulumi/dev-personal
           working_directory: ~/project/infra/cloudrun
