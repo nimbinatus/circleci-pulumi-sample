@@ -91,14 +91,16 @@ jobs:
           stack: nimbinatus/circleci-pulumi/dev-personal
           working_directory: ~/project/infra/cloudrun
 workflows:
-  version: 2.1
-  preview:
+  version: 2
+  pulumi-preview:
     jobs:
       - preview:
           filters:
             branches:
               ignore:
                 - main
+  pulumi-deploy:
+    jobs:
       - build:
           filters:
             branches:
