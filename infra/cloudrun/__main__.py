@@ -3,7 +3,12 @@ import os
 import pulumi
 import pulumi_gcp as gcp
 
-config = pulumi.Config()
+config = pulumi.Config('google-native')
+location = config.require('region')
+project = config.require('project')
+repo_name = "gunicorn-image"
+gimage = "gunicorn-image"
+
 if 'CIRCLE_BRANCH' in os.environ and os.environ['CIRCLE_BRANCH'] != 'main':
     container_tag = os.environ['CIRCLE_BUILD_NUM']
 else:
@@ -15,7 +20,7 @@ cloud_run = gcp.cloudrun.Service(
     template=gcp.cloudrun.ServiceTemplateArgs(
         spec=gcp.cloudrun.ServiceTemplateSpecArgs(
             containers=[gcp.cloudrun.ServiceTemplateSpecContainerArgs(
-                image=f'gcr.io/{pulumi.Config("gcp").require("project")}/gunicorn-image:{container_tag}',
+                image=f'{location}-docker.pkg.dev/{project}/{repo_name}/{gimage}:{container_tag}',
                 ports=[gcp.cloudrun.ServiceTemplateSpecContainerPortArgs(
                     container_port=8080
                 )]

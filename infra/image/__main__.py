@@ -26,18 +26,10 @@ registry = gcp_native.artifactregistry.v1beta2.Repository(
     format=gcp_native.artifactregistry.v1beta2.RepositoryFormat("DOCKER"),
 )
 
-registry.id.apply(
-    lambda id: print(f'my id is us-central1-docker.pkg.dev/{id}/{gimage}:{tag}')
-)
-registry.id.apply(
-        lambda id: f'{pulumi.Config("google-native").require("region")}-docker.pkg.dev/{id}/{gimage}:{tag}'
-)
-print('compare to us-central1-docker.pkg.dev/phrasal-vent-317819/gunicorn-image')
-
 gunicorn_image = docker.Image(
     gimage,
     build=f'{path.parents[1]}/api',
-    image_name=f'{location}-docker.pkg.dev/{project}/{repo_name}/{gimage}',
+    image_name=f'{location}-docker.pkg.dev/{project}/{repo_name}/{gimage}:{tag}',
     opts=pulumi.ResourceOptions(depends_on=[registry])
 )
 pulumi.export("image name", gunicorn_image.image_name)
