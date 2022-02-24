@@ -75,7 +75,7 @@ jobs:
           registry-url: us-central1-docker.pkg.dev
       - pulumi/update:
           stack: nimbinatus/circleci-pulumi/dev-personal
-          working_directory: ~/project/infra-ts/cloudrun
+          working_directory: ~/project/infra-ts/cloud-run
 workflows:
   version: 2.1
   pulumi-preview:
