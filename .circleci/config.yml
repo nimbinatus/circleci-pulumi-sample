@@ -13,7 +13,7 @@ jobs:
       - pulumi/login:
           access-token: ${PULUMI_ACCESS_TOKEN}
       - node/install-packages:
-          app-dir: ~/project/infra-ts/cloudrun
+          app-dir: ~/project/infra-ts/cloud-run
       - gcp-cli/install
       - gcp-cli/initialize
       - gcp-gcr/gcr-auth:
@@ -23,7 +23,7 @@ jobs:
           working_directory: ~/project/infra-ts/image
       - pulumi/preview:
           stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}
-          working_directory: ~/project/infra-ts/cloudrun
+          working_directory: ~/project/infra-ts/cloud-run
       - pulumi/stack_output:
           stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}
           property_name: cloudRunUrl
@@ -37,7 +37,7 @@ jobs:
           working_directory: ~/project/infra-ts/image
       - pulumi/destroy:
           stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}
-          working_directory: ~/project/infra-ts/cloudrun
+          working_directory: ~/project/infra-ts/cloud-run
       - pulumi/stack_rm:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
       - pulumi/stack_rm:
@@ -65,9 +65,10 @@ jobs:
       - image: cimg/node:17.5.0
     steps:
       - checkout
-      - pulumi/login
+      - pulumi/login:
+          access-token: ${PULUMI_ACCESS_TOKEN}
       - node/install-packages:
-          app-dir: ~/project/infra-ts/cloudrun
+          app-dir: ~/project/infra-ts/cloud-run
       - gcp-cli/install
       - gcp-cli/initialize
       - gcp-gcr/gcr-auth:
