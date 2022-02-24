@@ -51,5 +51,5 @@ const noauth_iam_policy = new gcp.cloudrun.IamPolicy(
         policyData: noauth.then(noauth => noauth.policyData)
     })
 
-export const cloudRunUrl = cloud_run.statuses
+export const cloudRunUrl = cloud_run.statuses[0].url
 
