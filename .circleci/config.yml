@@ -3,34 +3,30 @@ orbs:
   pulumi: pulumi/pulumi@2.0.0
   gcp-cli: circleci/gcp-cli@2.4.0
   gcp-gcr: circleci/gcp-gcr@0.14.1
+  node: circleci/node@5.0.0
 jobs:
   preview:
     docker:
-      - image: cimg/python:3.9
+      - image: cimg/node:17.5.0
     steps:
       - checkout
       - pulumi/login:
           access-token: ${PULUMI_ACCESS_TOKEN}
-      - run:
-          name: Install dependencies
-          command: |
-            cd ~/project/infra/cloudrun
-            python -m venv ~/project/infra/image/venv
-            source ./venv/bin/activate
-            pip install -r ~/project/infra/image/requirements.txt
+      - node/install-packages:
+          app-dir: ~/project/infra-ts/cloudrun
       - gcp-cli/install
       - gcp-cli/initialize
       - gcp-gcr/gcr-auth:
           registry-url: us-central1-docker.pkg.dev
       - pulumi/preview:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
-          working_directory: ~/project/infra/image
+          working_directory: ~/project/infra-ts/image
       - pulumi/preview:
           stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}
-          working_directory: ~/project/infra/cloudrun
+          working_directory: ~/project/infra-ts/cloudrun
       - pulumi/stack_output:
           stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}
-          property_name: cloud_run_url
+          property_name: cloudRunUrl
           env_var: TEST_URL
       - run:
           name: Test URL
@@ -38,58 +34,47 @@ jobs:
             curl --sSJL $TEST_URL/hello
       - pulumi/destroy:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
-          working_directory: ~/project/infra/image
+          working_directory: ~/project/infra-ts/image
       - pulumi/destroy:
           stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}
-          working_directory: ~/project/infra/cloudrun
+          working_directory: ~/project/infra-ts/cloudrun
       - pulumi/stack_rm:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}
       - pulumi/stack_rm:
           stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}
   build:
     docker:
-      - image: cimg/python:3.9
+      - image: cimg/node:17.5.0
     steps:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: false
       - pulumi/login:
           access-token: ${PULUMI_ACCESS_TOKEN}
-      - run:
-          name: Install dependencies
-          command: |
-            cd ~/project/infra/image
-            python -m venv ~/project/infra/image/venv
-            source ./venv/bin/activate
-            pip install -r ~/project/infra/image/requirements.txt
-            docker --version
+      - node/install-packages:
+          app-dir: ~/project/infra-ts/image
       - gcp-cli/install
       - gcp-cli/initialize
       - gcp-gcr/gcr-auth:
           registry-url: us-central1-docker.pkg.dev
       - pulumi/update:
           stack: nimbinatus/docker-image-circleci/dev-personal
-          working_directory: ~/project/infra/image
+          working_directory: ~/project/infra-ts/image
   deploy:
     docker:
-      - image: cimg/python:3.9
+      - image: cimg/node:17.5.0
     steps:
       - checkout
       - pulumi/login
-      - run:
-          name: Install dependencies
-          command: |
-            cd ~/project/infra/cloudrun
-            python -m venv ~/project/infra/cloudrun/venv
-            source ./venv/bin/activate
-            pip install -r ~/project/infra/cloudrun/requirements.txt
+      - node/install-packages:
+          app-dir: ~/project/infra-ts/cloudrun
       - gcp-cli/install
       - gcp-cli/initialize
       - gcp-gcr/gcr-auth:
           registry-url: us-central1-docker.pkg.dev
       - pulumi/update:
           stack: nimbinatus/circleci-pulumi/dev-personal
-          working_directory: ~/project/infra/cloudrun
+          working_directory: ~/project/infra-ts/cloudrun
 workflows:
   version: 2.1
   pulumi-preview:
