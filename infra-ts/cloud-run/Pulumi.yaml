@@ -1,3 +1,3 @@
-name: cloud-run
+name: circle-ci
 runtime: nodejs
 description: A minimal TypeScript Pulumi program
