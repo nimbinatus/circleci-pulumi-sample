@@ -8,7 +8,7 @@ api = application = falcon.App()
 class Home(object):
     def on_get(self, req, resp):
         payload = {
-            "response": "OK"
+            "response": "OK good"
         }
         resp.text = json.dumps(payload)
         resp.status = falcon.HTTP_200
