@@ -14,6 +14,8 @@ jobs:
           access-token: ${PULUMI_ACCESS_TOKEN}
       - node/install-packages:
           app-dir: ~/project/infra-ts/cloud-run
+      - node/install-packages:
+          app-dir: ~/project/infra-ts/image
       - gcp-cli/install
       - gcp-cli/initialize
       - gcp-gcr/gcr-auth:
