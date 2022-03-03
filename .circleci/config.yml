@@ -26,6 +26,11 @@ jobs:
       - pulumi/stack_init:
           stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}-cr
           working_directory: ~/project/infra-ts/cloud-run
+      - run:
+          name: Config
+          command: |
+            pulumi config --config-file Pulumi.dev-personal.yaml --stack nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-image
+            pulumi config --config-file Pulumi.dev-personal.yaml --stack nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-cr
       - pulumi/preview:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-image
           working_directory: ~/project/infra-ts/image
