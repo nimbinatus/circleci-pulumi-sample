@@ -23,7 +23,7 @@ class Greeting(object):
             }
         else:
             payload = {
-                "response": "hello, world"
+                "response": "hello, world!"
             }
         resp.text = json.dumps(payload)
         resp.status = falcon.HTTP_200
