@@ -54,7 +54,7 @@ jobs:
       - run:
           name: Test URL
           command: |
-            curl --sSJL $TEST_URL/hello
+            curl -sSJL $TEST_URL/hello
       - pulumi/destroy:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-image
           working_directory: ~/project/infra-ts/image
