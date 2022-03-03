@@ -19,7 +19,7 @@ class Greeting(object):
     def on_get(self, req, resp):
         if "name" in req.params:
             payload = {
-                "response": f'hello, {req.params["name"]}'
+                "response": f'hello, {req.params["name"]}!!!'
             }
         else:
             payload = {
