@@ -19,11 +19,11 @@ class Greeting(object):
     def on_get(self, req, resp):
         if "name" in req.params:
             payload = {
-                "response": f'hello, {req.params["name"]}'
+                "response": f'hello, {req.params["name"]}!'
             }
         else:
             payload = {
-                "response": "hello, world"
+                "response": "hello, world!"
             }
         resp.text = json.dumps(payload)
         resp.status = falcon.HTTP_200
