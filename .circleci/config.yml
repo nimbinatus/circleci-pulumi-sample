@@ -29,9 +29,13 @@ jobs:
       - run:
           name: Config
           command: |
+            echo trying to set config
             pulumi config set-all --config-file ~/project/infra-ts/config-template.yaml --stack nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-image
-            pulumi stack select nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-image 
+            echo selecting stack
+            pulumi stack select nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-image
+            echo give me config
             pulumi config
+            echo done
             pulumi config set-all --config-file ~/project/infra-ts/config-template.yaml --stack nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}-cr
             pulumi stack select nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}-cr
             pulumi config --stack nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}-cr
