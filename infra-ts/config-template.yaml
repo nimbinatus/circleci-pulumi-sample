@@ -2,3 +2,6 @@ config:
   google-native:project: phrasal-vent-317819
   google-native:region: us-central1
   google-native:zone: us-central1-a
+  gcp:project: phrasal-vent-317819
+  gcp:region: us-central1
+  gcp:zone: us-central1-a
