@@ -8,9 +8,6 @@ import * as ngcp from "@pulumi/google-native";
 const config = new pulumi.Config('google-native');
 const location = config.require('region');
 const project = config.require('project');
-// const repo_name = "gunicorn-image";
-// const gimage = "gunicorn-image";
-
 let tag;
 let gimage;
 let repo_name

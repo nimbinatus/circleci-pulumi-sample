@@ -4,14 +4,18 @@ import * as gcp from "@pulumi/gcp";
 const config = new pulumi.Config('google-native');
 const location = config.require('region');
 const project = config.require('project');
-const repo_name = "gunicorn-image";
-const gimage = "gunicorn-image";
+let repo_name;
+let gimage;
 let container_tag;
 
 if (process.env.CIRCLE_BRANCH && process.env.CIRCLE_BRANCH != 'main') {
     container_tag = process.env.CIRCLE_BUILD_NUM;
+    gimage = `gunicorn-image-${container_tag}`;
+    repo_name = `gunicorn-image-${container_tag}`;
 } else {
-    container_tag = 'latest'
+    container_tag = 'latest';
+    gimage = 'gunicorn-image';
+    repo_name = 'gunicorn-image';
 }
 
 const my_provider = new gcp.Provider(
