@@ -20,25 +20,17 @@ jobs:
       - gcp-cli/initialize
       - gcp-gcr/gcr-auth:
           registry-url: us-central1-docker.pkg.dev
-      - pulumi/stack_init:
-          stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-image
-          working_directory: ~/project/infra-ts/image
-      - pulumi/stack_init:
-          stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}-cr
-          working_directory: ~/project/infra-ts/cloud-run
+#      - pulumi/stack_init:
+#          stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-image
+#          working_directory: ~/project/infra-ts/image
+#      - pulumi/stack_init:
+#          stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}-cr
+#          working_directory: ~/project/infra-ts/cloud-run
       - run:
-          name: Config
+          name: Stack Init
           command: |
-            echo trying to set config
-            pulumi config set-all --config-file ~/project/infra-ts/config-template.yaml --stack nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-image
-            echo selecting stack
-            pulumi stack select nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-image
-            echo give me config
-            pulumi config
-            echo done
-            pulumi config set-all --config-file ~/project/infra-ts/config-template.yaml --stack nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}-cr
-            pulumi stack select nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}-cr
-            pulumi config --stack nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}-cr
+            pulumi stack init --stack nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-image --cwd ~/project/infra-ts/image --copy-stack-from nimbinatus/docker-image-circleci/dev-personal
+            pulumi stack init --stack nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}-cr --cwd ~/project/infra-ts/cloud-run --copy-stack-from nimbinatus/circleci-pulumi/dev-personal
       - pulumi/preview:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-image
           working_directory: ~/project/infra-ts/image
