@@ -39,6 +39,14 @@ jobs:
       - pulumi/preview:
           stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}-cr
           working_directory: ~/project/infra-ts/cloud-run
+      - pulumi/update:
+          stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-image
+          working_directory: ~/project/infra-ts/image
+          skip-preview: true
+      - pulumi/update:
+          stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}-cr
+          working_directory: ~/project/infra-ts/cloud-run
+          skip-preview: true
       - pulumi/stack_output:
           stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}-cr
           property_name: cloudRunUrl
