@@ -8,16 +8,24 @@ import * as ngcp from "@pulumi/google-native";
 const config = new pulumi.Config('google-native');
 const location = config.require('region');
 const project = config.require('project');
-const repo_name = "gunicorn-image";
-const gimage = "gunicorn-image";
+// const repo_name = "gunicorn-image";
+// const gimage = "gunicorn-image";
 
-let tag
+let tag;
+let gimage;
+let repo_name
 
 if (process.env.CIRCLE_BRANCH && process.env.CIRCLE_BRANCH != 'main') {
     tag = process.env.CIRCLE_BUILD_NUM;
+    gimage = `gunicorn-image-${tag}`;
+    repo_name = `gunicorn-image-${tag}`;
 } else {
     tag = 'latest';
+    gimage = 'gunicorn-image';
+    repo_name = 'gunicorn-image';
 }
+
+
 
 const my_provider = new ngcp.Provider(
     "gcp-config",
