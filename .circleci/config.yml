@@ -30,8 +30,10 @@ jobs:
           name: Config
           command: |
             pulumi config --config-file ~/project/infra-ts/config-template.yaml --stack nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-image
+            echo nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-image
             pulumi config --stack nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-image
             pulumi config --config-file ~/project/infra-ts/config-template.yaml --stack nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}-cr
+            echo nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}-cr
             pulumi config --stack nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}-cr
       - pulumi/preview:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-image
