@@ -19,18 +19,31 @@ if (process.env.CIRCLE_BRANCH && process.env.CIRCLE_BRANCH != 'main') {
     tag = 'latest';
 }
 
+const my_provider = new ngcp.Provider(
+    "gcp-config",
+    {
+        project: process.env.GOOGLE_PROJECT_ID,
+        region: process.env.GOOGLE_COMPUTE_REGION,
+        zone: process.env.GOOGLE_COMPUTE_ZONE
+    }
+)
+
 const registry = new ngcp.artifactregistry.v1beta2.Repository(
     gimage, {
         location: `${config.require("region")}`,
         repositoryId: gimage,
         format: "DOCKER",
+    }, {
+        provider: my_provider
     });
 
 const gunicornImage = new docker.Image(
     gimage, {
         build: `${path.join(__dirname, '../../')}api`,
-        imageName: `${location}-docker.pkg.dev/${project}/${repo_name}/${gimage}:${tag}`},
-        {dependsOn: [registry]}
-    )
+        imageName: `${location}-docker.pkg.dev/${project}/${repo_name}/${gimage}:${tag}`
+    }, {
+        dependsOn: [registry],
+        provider: my_provider
+    })
 
 export const imageName = gunicornImage.imageName

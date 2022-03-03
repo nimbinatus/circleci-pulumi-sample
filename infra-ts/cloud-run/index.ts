@@ -1,6 +1,5 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as gcp from "@pulumi/gcp";
-import * as ngcp from "@pulumi/google-native";
 
 const config = new pulumi.Config('google-native');
 const location = config.require('region');
@@ -14,6 +13,15 @@ if (process.env.CIRCLE_BRANCH && process.env.CIRCLE_BRANCH != 'main') {
 } else {
     container_tag = 'latest'
 }
+
+const my_provider = new gcp.Provider(
+    "gcp-provider",
+    {
+        project: process.env.GOOGLE_PROJECT_ID,
+        region: process.env.GOOGLE_COMPUTE_REGION,
+        zone: process.env.GOOGLE_COMPUTE_ZONE
+    }
+)
 
 const cloud_run = new gcp.cloudrun.Service(
     "gunicorn-service", {
@@ -32,6 +40,8 @@ const cloud_run = new gcp.cloudrun.Service(
             latestRevision: true,
             percent: 100,
         }],
+    }, {
+        provider: my_provider
     })
 
 const noauth = gcp.organizations.getIAMPolicy({
@@ -41,6 +51,8 @@ const noauth = gcp.organizations.getIAMPolicy({
             members: ["allUsers"],
         }
     ]
+}, {
+    provider: my_provider
 })
 
 const noauth_iam_policy = new gcp.cloudrun.IamPolicy(
@@ -49,6 +61,8 @@ const noauth_iam_policy = new gcp.cloudrun.IamPolicy(
         project: cloud_run.project,
         service: cloud_run.name,
         policyData: noauth.then(noauth => noauth.policyData)
+    }, {
+        provider: my_provider
     })
 
 export const cloudRunUrl = cloud_run.statuses[0].url
