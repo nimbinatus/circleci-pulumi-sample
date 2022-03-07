@@ -4,6 +4,27 @@ orbs:
   gcp-cli: circleci/gcp-cli@2.4.0
   gcp-gcr: circleci/gcp-gcr@0.14.1
   node: circleci/node@5.0.0
+  my-test-orb:
+    orbs:
+      pulumi: pulumi/pulumi@2.0.0
+    commands:
+      my-command:
+        parameters:
+          stack:
+            type: string
+          secrets_provider:
+            type: string
+            default: "default"
+          working_directory:
+            type: string
+            default: "."
+          copy:
+            type: string
+            default: ""
+        steps:
+          - run:
+              name: "pulumi stack init --stack << parameters.stack >> --secrets-provider << parameters.secrets_provider >>"
+              command: pulumi stack init --stack << parameters.stack >> --secrets-provider << parameters.secrets_provider >> --cwd << parameters.working_directory >> <<# parameters.copy >>--copy-config-from << parameters.copy >><</ parameters.copy >>
 jobs:
   preview:
     docker:
@@ -28,11 +49,22 @@ jobs:
 #      - pulumi/stack_init:
 #          stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}-cr
 #          working_directory: ~/project/infra-ts/cloud-run
-      - run:
-          name: Stack Init
-          command: |
-            pulumi stack init --stack nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-image --cwd ~/project/infra-ts/image --copy-config-from nimbinatus/docker-image-circleci/dev-personal
-            pulumi stack init --stack nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}-cr --cwd ~/project/infra-ts/cloud-run --copy-config-from nimbinatus/circleci-pulumi/dev-personal
+#      - run:
+#          name: Stack Init
+#          command: |
+#            pulumi stack init --stack nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-image --cwd ~/project/infra-ts/image --copy-config-from nimbinatus/docker-image-circleci/dev-personal
+#            pulumi stack init --stack nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}-cr --cwd ~/project/infra-ts/cloud-run --copy-config-from nimbinatus/circleci-pulumi/dev-personal
+      - my-test-orb/my-command:
+          stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-image
+          working_directory: ~/project/infra-ts/image
+          copy: nimbinatus/docker-image-circleci/dev-personal
+      - my-test-orb/my-command:
+          stack: nimbinatus/circleci-pulumi/qa_${CIRCLE_BUILD_NUM}-cr
+          working_directory: ~/project/infra-ts/cloud-run
+          copy: nimbinatus/circleci-pulumi/dev-personal
+      - my-test-orb/my-command:
+          stack: nimbinatus/docker-image-circleci/TEST
+          working_directory: ~/project/infra-ts/image
       - pulumi/preview:
           stack: nimbinatus/docker-image-circleci/qa_${CIRCLE_BUILD_NUM}-image
           working_directory: ~/project/infra-ts/image
