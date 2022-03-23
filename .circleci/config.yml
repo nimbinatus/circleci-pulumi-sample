@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  pulumi: pulumi/pulumi@dev:v2.1.0-alpha
+  pulumi: pulumi/pulumi@2.1.0
   gcp-cli: circleci/gcp-cli@2.4.0
   gcp-gcr: circleci/gcp-gcr@0.14.1
   node: circleci/node@5.0.0
